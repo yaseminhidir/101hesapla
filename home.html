@@ -1,162 +1,237 @@
-<script src="https://unpkg.com/vue@3"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Source+Sans+Pro&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Source+Sans+Pro:wght@400;900&display=swap" rel="stylesheet">
-<div id="app">
-  <center>
-    <span style="font-size: 20px;font-family: 'Source Sans Pro', sans-serif;"> Eliniz: {{score}}</span>
-    <br />
-    <strong style="font-size: 35px;font-family: 'Source Sans Pro', sans-serif;">{{message}}</strong>
-    <br />
-    <div>
-      <span style="font-size: 20px;font-family: 'Source Sans Pro', sans-serif;"> Üçlü Perlerin Ortasını Seçiniz:</span>
-      <br />
-      <button
-        class="rummyTiles"
-        v-on:click="threeTileCount(i)"
-        v-for="(i, index) in threeTiles"
-        :key="{index}"
-      >
-        <span
-          style="font-size: 45px; font-family: 'Roboto Condensed', sans-serif"
-          >{{i}}</span
-        >
-        <div class="rummyTilesCircle"></div>
-      </button>
-      <br />
-      <span style="font-size: 20px;font-family: 'Source Sans Pro', sans-serif;"> Yanları Giriniz: </span>
-
-      <br />
-      <button
-        class="rummyTiles"
-        v-on:click="sideTileCount(side)"
-        v-for="(side, index) in sides"
-        :key="{index}"
-      >
-        <span
-          style="font-size: 45px; font-family: 'Roboto Condensed', sans-serif"
-          >{{side}}</span
-        >
-        <div class="rummyTilesCircle"></div>
-      </button>
-      <br>
-      <button v-on:click="reset" class="deleteButton">Sıfırla</button>
-    </div>
-    <div v-if="selectedThreeTiles.length>0" class="listDiv" >
-        Seçili Perler:
-        <div v-for="(tile,index) in selectedThreeTiles" :key="index">
-         <span>{{tile}}</span> 
-          <button v-on:click="deleteSelectedTile(index)" class="deleteButton">Sil</button>
-        </div>
-
-    </div>
-    <div v-if="selectedSides.length>0"  class="listDiv" >
-        Seçili Yanlar:
-       
-          <div v-for="(side,index) in selectedSides" :key="index">
-           <span>{{side}}</span> 
-            <button v-on:click="deleteSelectedSide(index)" class="deleteButton">Sil</button>
-          </div>
-      
-      </div>
-  </center>
-</div>
-
-<script>
-  const { createApp } = Vue;
-
-  createApp({
-    data() {
-      return {
-        score: 0,
-        message: "",
-        threeTiles: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-        sides: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-        selectedSides: [],
-        selectedThreeTiles: [],
-        yanSonuc: 0,
-        threeTileResult: 0,
-      };
-    },
-    methods: {
-      threeTileCount(threeTile) {
-        console.log(threeTile);
-        this.selectedThreeTiles.push(threeTile);
-        this.threeTileResult += threeTile;
-        this.HandCount();
-      },
-      sideTileCount(side) {
-        if (side == 2) {
-          this.yanSonuc += 1;
-        }
-        this.selectedSides.push(side);
-        var res = Math.floor(side / 3);
-        console.log(res);
-        this.yanSonuc += res;
-        this.HandCount();
-      },
-      HandCount() {
-        this.score = this.yanSonuc + this.threeTileResult;
-        this.showMessage();
-      },
-      showMessage() {
-        if (this.score >= 34) {
-          this.message = "Açar";
-        } else {
-          this.message = "Açmaz";
-        }
-      },
-      reset() {
-        this.score = 0;
-        this.yanSonuc = 0;
-        this.threeTileResult = 0;
-        this.selectedSides= [],
-        this.selectedThreeTiles= [],
-        this.message = "";
-      },
-      deleteSelectedTile(index) {
-        this.selectedThreeTiles.splice(index, 1)
-       
-        console.log(this.selectedThreeTiles);
-      },
-      deleteSelectedSide(index){
-        this.selectedSides.splice(index, 1)
-       
+<html>
+  <head>
+    <script src="https://unpkg.com/vue@3"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Source+Sans+Pro&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Source+Sans+Pro:wght@400;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-JVMWZSTDZL"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-    },
-  }).mount("#app");
-</script>
-<style>
-  .rummyTiles {
-    width: 80px;
-    height: 104px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: none;
-    -webkit-box-shadow: 3px 3px 15px 5px rgb(0 0 0 / 23%) !important;
-    box-shadow: 3px 3px 15px 5px rgb(0 0 0 / 23%);
-  }
-  .rummyTilesCircle {
-    border-radius: 100px;
-    width: 30px;
-    height: 30px;
-    background-color: rgb(222 221 221 / 71%);
-    margin: auto;
-  }
-  .listDiv{
-    width:150px;border-radius: 5px;border:1px solid gray
-  }
-  .deleteButton{
-    margin-bottom: 10px;border:1px solid red;border-radius: 5px;
-  }
+      gtag("js", new Date());
 
-</style>
+      gtag("config", "G-JVMWZSTDZL");
+    </script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-W86LVN6");
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-W86LVN6"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="app">
+      <center>
+        <span
+          style="font-size: 20px; font-family: 'Source Sans Pro', sans-serif"
+        >
+          Eliniz: {{score}}</span
+        >
+        <br />
+        <strong
+          style="font-size: 35px; font-family: 'Source Sans Pro', sans-serif"
+          >{{message}}</strong
+        >
+        <br />
+        <div>
+          <span
+            style="font-size: 20px; font-family: 'Source Sans Pro', sans-serif"
+          >
+            Üçlü Perlerin Ortasını Seçiniz:</span
+          >
+          <br />
+          <button
+            class="rummyTiles"
+            v-on:click="threeTileCount(i)"
+            v-for="(i, index) in threeTiles"
+            :key="{index}"
+          >
+            <span
+              style="
+                font-size: 45px;
+                font-family: 'Roboto Condensed', sans-serif;
+              "
+              >{{i}}</span
+            >
+            <div class="rummyTilesCircle"></div>
+          </button>
+          <br />
+          <span
+            style="font-size: 20px; font-family: 'Source Sans Pro', sans-serif"
+          >
+            Yanları Giriniz:
+          </span>
+
+          <br />
+          <button
+            class="rummyTiles"
+            v-on:click="sideTileCount(side)"
+            v-for="(side, index) in sides"
+            :key="{index}"
+          >
+            <span
+              style="
+                font-size: 45px;
+                font-family: 'Roboto Condensed', sans-serif;
+              "
+              >{{side}}</span
+            >
+            <div class="rummyTilesCircle"></div>
+          </button>
+          <br />
+          <button v-on:click="reset" class="deleteButton">Sıfırla</button>
+        </div>
+        <div v-if="selectedThreeTiles.length>0" class="listDiv">
+          Seçili Perler:
+          <div v-for="(tile,index) in selectedThreeTiles" :key="index">
+            <span>{{tile}}</span>
+            <button v-on:click="deleteSelectedTile(index)" class="deleteButton">
+              Sil
+            </button>
+          </div>
+        </div>
+        <div v-if="selectedSides.length>0" class="listDiv">
+          Seçili Yanlar:
+
+          <div v-for="(side,index) in selectedSides" :key="index">
+            <span>{{side}}</span>
+            <button v-on:click="deleteSelectedSide(index)" class="deleteButton">
+              Sil
+            </button>
+          </div>
+        </div>
+      </center>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            score: 0,
+            message: "",
+            threeTiles: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            sides: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            selectedSides: [],
+            selectedThreeTiles: [],
+            yanSonuc: 0,
+            threeTileResult: 0,
+          };
+        },
+        methods: {
+          threeTileCount(threeTile) {
+            console.log(threeTile);
+            this.selectedThreeTiles.push(threeTile);
+            this.threeTileResult += threeTile;
+            this.HandCount();
+          },
+          sideTileCount(side) {
+            if (side == 2) {
+              this.yanSonuc += 1;
+            }
+            this.selectedSides.push(side);
+            var res = Math.floor(side / 3);
+            console.log(res);
+            this.yanSonuc += res;
+            this.HandCount();
+          },
+          HandCount() {
+            this.score = this.yanSonuc + this.threeTileResult;
+            this.showMessage();
+          },
+          showMessage() {
+            if (this.score >= 34) {
+              this.message = "Açar";
+            } else {
+              this.message = "Açmaz";
+            }
+          },
+          reset() {
+            this.score = 0;
+            this.yanSonuc = 0;
+            this.threeTileResult = 0;
+            (this.selectedSides = []),
+              (this.selectedThreeTiles = []),
+              (this.message = "");
+          },
+          deleteSelectedTile(index) {
+            this.selectedThreeTiles.splice(index, 1);
+
+            console.log(this.selectedThreeTiles);
+          },
+          deleteSelectedSide(index) {
+            this.selectedSides.splice(index, 1);
+          },
+        },
+      }).mount("#app");
+    </script>
+    <style>
+      .rummyTiles {
+        width: 80px;
+        height: 104px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: none;
+        -webkit-box-shadow: 3px 3px 15px 5px rgb(0 0 0 / 23%) !important;
+        box-shadow: 3px 3px 15px 5px rgb(0 0 0 / 23%);
+      }
+      .rummyTilesCircle {
+        border-radius: 100px;
+        width: 30px;
+        height: 30px;
+        background-color: rgb(222 221 221 / 71%);
+        margin: auto;
+      }
+      .listDiv {
+        width: 150px;
+        border-radius: 5px;
+        border: 1px solid gray;
+      }
+      .deleteButton {
+        margin-bottom: 10px;
+        border: 1px solid red;
+        border-radius: 5px;
+      }
+    </style>
+  </body>
+</html>
